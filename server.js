@@ -22,7 +22,7 @@ app.set('views', path.join(__dirname, 'public'))
 	.use(cookieParser())
 	.use('/', home);
 
-const listener = app.listen(config.server.port, () =>
+const listener = app.listen(process.env.PORT || config.server.port, () =>
 	console.log(`Express Server listening on port ${listener.address().port}`));
 
 module.exports = {

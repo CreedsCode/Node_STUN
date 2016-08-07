@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+            <state relative-caret-position="408">
+              <caret line="24" column="48" selection-start-line="24" selection-start-column="48" selection-end-line="24" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -41,7 +41,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/stun/server.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="765">
@@ -114,13 +114,13 @@
         <option value="$PROJECT_DIR$/config.js" />
         <option value="$PROJECT_DIR$/lib/server.js" />
         <option value="$PROJECT_DIR$/server/stun.js" />
-        <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/server/stun/index.js" />
         <option value="$PROJECT_DIR$/server/stun/const.js" />
         <option value="$PROJECT_DIR$/server/stun/server.js" />
         <option value="$PROJECT_DIR$/server/stun/logger.js" />
         <option value="$PROJECT_DIR$/server/stun/message.js" />
         <option value="$PROJECT_DIR$/server/stun/utils.js" />
+        <option value="$PROJECT_DIR$/server.js" />
       </list>
     </option>
   </component>
@@ -314,12 +314,12 @@
       <workItem from="1470543655876" duration="838000" />
       <workItem from="1470544718691" duration="592000" />
       <workItem from="1470552755981" duration="8231000" />
-      <workItem from="1470596669279" duration="2619000" />
+      <workItem from="1470596669279" duration="3037000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12280000" />
+    <option name="totallyTimeSpent" value="12698000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="403" y="111" width="1424" height="857" extended-state="0" />
@@ -600,14 +600,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/stun/utils.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -636,6 +628,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="765">
           <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="48" selection-start-line="24" selection-start-column="48" selection-end-line="24" selection-end-column="48" />
           <folding />
         </state>
       </provider>
