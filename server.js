@@ -1,15 +1,5 @@
 'use strict';
 
-exports.createServer = function (config) {
-	const Server = require('./lib/server');
-	return new Server(config);
-};
-
-exports.createClient = function () {
-	const Client = require('./lib/client');
-	return new Client();
-};
-
 const express = require('express'),
 	path = require('path'),
 	favicon = require('serve-favicon'),
@@ -17,7 +7,11 @@ const express = require('express'),
 	cookieParser = require('cookie-parser'),
 	bodyParser = require('body-parser'),
 	home = require('./server/controllers/home'),
-	app = express();
+	app = express(),
+	config = require('./config'),
+	stun = require('./server/stun');
+
+stun.createServer(config.stun);
 
 app.set('views', path.join(__dirname, 'public'))
 	.set('view engine', 'ejs')
@@ -29,7 +23,7 @@ app.set('views', path.join(__dirname, 'public'))
 	.use(cookieParser())
 	.use('/', home);
 
-const listener = app.listen(8888, () =>
-	console.log(`Listening on port ${listener.address().port}`));
+const listener = app.listen(config.server.port, () =>
+	console.log(`Express Server listening on port ${listener.address().port}`));
 
 module.exports = app;
