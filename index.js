@@ -21,6 +21,7 @@ const express = require('express'),
 
 app.set('views', path.join(__dirname, 'public'))
 	.set('view engine', 'ejs')
+	.use(express.static('public'))
 	.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 	.use(logger('dev'))
 	.use(bodyParser.json())
