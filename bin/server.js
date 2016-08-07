@@ -2,7 +2,7 @@
 'use strict';
 
 // Load config (ini) file.
-const config = (function () {
+const config = (() => {
 	const fs = require('fs'),
 		path = require('path'),
 		ini = require('ini'),
@@ -38,7 +38,7 @@ const stun = require('../index'),
 	server = stun.createServer(config);
 
 // Set log event handler
-server.on('log', function (log) {
+server.on('log', (log) => {
 	console.log('%s : [%s] %s', new Date(), log.level, log.message);
 });
 

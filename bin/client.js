@@ -30,7 +30,7 @@ client.start(function (result) {
         " rtt=" + client.getRtt()
     ].join(''));
 
-    client.close(function () {
+    client.close(() => {
         console.log("All sockets closed.");
     });
 });
