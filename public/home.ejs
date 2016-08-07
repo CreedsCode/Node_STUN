@@ -1,92 +1,94 @@
 <!DOCTYPE html>
 <html lang="en-us" class="no-js">
 
-	<head>
-		<meta charset="utf-8">
-        <title>VARSTATE</title>
-        <meta name="description" content="The description should optimally be between 150-160 characters.">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="Adam I. Gerard">
+<head>
+    <meta charset="utf-8">
+    <title>VARSTATE</title>
+    <meta name="description" content="The description should optimally be between 150-160 characters.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Adam I. Gerard">
 
-        <!-- ============== Resources style ============== -->
-        <link rel="stylesheet" href="css/style.css" />
+    <!-- ============== Resources style ============== -->
+    <link rel="stylesheet" href="css/style.css"/>
 
-		<!-- Modernizr runs quickly on page load to detect features -->
-		<script src="js/modernizr.custom.js"></script>
-	</head>
-	
-	<body>
+    <!-- Modernizr runs quickly on page load to detect features -->
+    <script src="js/modernizr.custom.js"></script>
+</head>
 
-		<!-- Page preloader -->
-		<div id="loading">
-			<div id="preloader">
-				<span></span>
-				<span></span>
-			</div>
-		</div>
+<body>
 
-		<canvas id="fireworks"></canvas>
+<!-- Page preloader -->
+<div id="loading">
+    <div id="preloader">
+        <span></span>
+        <span></span>
+    </div>
+</div>
 
-		<!-- Overlay and Star effect -->
-		<div class="global-overlay">
-			<div class="overlay skew-part">
+<canvas id="fireworks"></canvas>
 
-				<div id='stars'></div>
-				<div id='stars2'></div>
-				<div id='stars3'></div>
+<!-- Overlay and Star effect -->
+<div class="global-overlay">
+    <div class="overlay skew-part">
 
-			</div>
-		</div>
+        <div id='stars'></div>
+        <div id='stars2'></div>
+        <div id='stars3'></div>
 
-		<!-- START - Home/Left Part -->
-		<section id="left-side">
+    </div>
+</div>
 
-			<!-- Your logo -->
-			<img src="img/logo.png" alt="" class="brand-logo" />
+<!-- START - Home/Left Part -->
+<section id="left-side">
 
-			<div class="content">
+    <!-- Your logo -->
+    <img src="img/logo.png" alt="" class="brand-logo"/>
 
-				<h1 class="text-intro opacity-0">Welcome!<br>
-					A Free STUN Server For You!</h1>
+    <div class="content">
 
-				<h2 class="text-intro opacity-0">Forked from: <a href="https://github.com/enobufs/stun" target="__blank">enobufs</a><br>
-					For Your Very Own WebRTC Testing</h2>
-				<nav>
-					<ul>
-						<li>
-							<a href="#" id="copy" data-target="right-side" class="light-btn text-intro opacity-0">Click to Copy URL</a>
-						</li>
-						<li>
-							<a id="visit" class="action-btn trigger text-intro opacity-0">Visit Me!</a>
-						</li>
-					</ul>
-				</nav>
+        <h1 class="text-intro opacity-0">Welcome!<br>
+            A Free STUN Server For You!</h1>
 
-			</div>
+        <h2 class="text-intro opacity-0">Forked from: <a href="https://github.com/enobufs/stun"
+                                                         target="__blank">enobufs</a><br>
+            For Your Very Own WebRTC Testing</h2>
+        <nav>
+            <ul>
+                <li>
+                    <a href="#" id="copy" data-target="right-side" class="light-btn text-intro opacity-0">Click to Copy
+                        URL</a>
+                </li>
+                <li>
+                    <a id="visit" class="action-btn trigger text-intro opacity-0">Visit Me!</a>
+                </li>
+            </ul>
+        </nav>
 
-			<!-- Social icons -->
-			<div class="social-icons">
+    </div>
 
-				<a href="https://www.facebook.com/profile.php?id=16904713"><i class="fa fa-facebook"></i></a>
-				<a href="skype:kingdom.of.ends?call"><i class="fa fa-skype"></i></a>
-				<a href="https://plus.google.com/u/0/116285994095996582916/posts"><i class="fa fa-google-plus"></i></a>
-				<a href="https://www.linkedin.com/in/adamintaegerard"><i class="fa fa-linkedin"></i></a>
+    <!-- Social icons -->
+    <div class="social-icons">
 
-			</div>
+        <a href="https://www.facebook.com/profile.php?id=16904713"><i class="fa fa-facebook"></i></a>
+        <a href="skype:kingdom.of.ends?call"><i class="fa fa-skype"></i></a>
+        <a href="https://plus.google.com/u/0/116285994095996582916/posts"><i class="fa fa-google-plus"></i></a>
+        <a href="https://www.linkedin.com/in/adamintaegerard"><i class="fa fa-linkedin"></i></a>
 
-		</section>
-		<!-- END - Home/Left Part -->
+    </div>
 
-			<footer>
-				<p id="copyText" style="display:none">http://www.varstate.com | 127.0.0.1 | 127.0.0.2 </p>
-			</footer>
+</section>
+<!-- END - Home/Left Part -->
 
-		</section>
+<footer>
+    <p id="copyText" style="display:none">http://www.varstate.com | 127.0.0.1 | 127.0.0.2 </p>
+</footer>
 
-	<!-- Custom -->	
-    <!-- From this cool dude: http://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery-->
-	<script>
-    document.getElementById("copy").addEventListener("click", function() {
+</section>
+
+<!-- Custom -->
+<!-- From this cool dude: http://stackoverflow.com/questions/22581345/click-button-copy-to-clipboard-using-jquery-->
+<script>
+    document.getElementById("copy").addEventListener("click", function () {
         copyToClipboard(document.getElementById("copyText"));
     });
 
@@ -139,56 +141,77 @@
         }
         return succeed;
     }
-	</script>
+</script>
 
-	<!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
-    <!-- ********** Resources jQuery ********** -->
-    <!-- \\\\\\\\\\\	\\\\\\\\/////////////////// -->
-	
-	<!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery.easings.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+<!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
+<!-- ********** Resources jQuery ********** -->
+<!-- \\\\\\\\\\\	\\\\\\\\/////////////////// -->
 
-	<!-- Custom -->
-	<script>
-		$(document).ready(function() {
-			$('#visit').click(function(e){
-				e.preventDefault();
-				window.open("http://www.stackchampion.com", "__blank");
-			});
-		});
-	</script>
+<!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.easings.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
-	<!-- Accelerated JavaScript animation JS file -->
-	<script src="js/velocity.min.js"></script> 
+<!-- Custom -->
+<script>
+    $(document).ready(function () {
+        $('#visit').click(function (e) {
+            e.preventDefault();
+            window.open("http://www.stackchampion.com", "__blank");
+        });
+    });
+</script>
 
-	<!-- Accelerated JavaScript animation UI JS file -->
-	<script src="js/velocity.ui.min.js"></script> 
+<!-- GA -->
+<script>
 
-	<!-- Slideshow/Image plugin (only for fireworks variant) -->
-	<script src="js/vegas-fireworks.js"></script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-	<!-- Scroll plugin -->
-	<script src="js/jquery.mousewheel.js"></script>
+    ga('create', 'UA-50658507-9', 'auto');
+    ga('send', 'pageview');
 
-	<!-- Custom Scrollbar plugin -->
-	<script src="js/jquery.mCustomScrollbar.js"></script>
+</script>
 
-	<!-- PhotoSwipe Core JS file -->
-	<script src="js/photoswipe.js"></script> 
+<!-- Accelerated JavaScript animation JS file -->
+<script src="js/velocity.min.js"></script>
 
-	<!-- PhotoSwipe UI JS file -->
-	<script src="js/photoswipe-ui-default.js"></script>
+<!-- Accelerated JavaScript animation UI JS file -->
+<script src="js/velocity.ui.min.js"></script>
 
-	<!-- Fireworks plugin -->
-	<script src="js/fireworks.js"></script>
+<!-- Slideshow/Image plugin (only for fireworks variant) -->
+<script src="js/vegas-fireworks.js"></script>
 
-	<!-- Main JS File -->
-	<script src="js/main.js"></script>
-	
-	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
+<!-- Scroll plugin -->
+<script src="js/jquery.mousewheel.js"></script>
 
-	</body>
+<!-- Custom Scrollbar plugin -->
+<script src="js/jquery.mCustomScrollbar.js"></script>
+
+<!-- PhotoSwipe Core JS file -->
+<script src="js/photoswipe.js"></script>
+
+<!-- PhotoSwipe UI JS file -->
+<script src="js/photoswipe-ui-default.js"></script>
+
+<!-- Fireworks plugin -->
+<script src="js/fireworks.js"></script>
+
+<!-- Main JS File -->
+<script src="js/main.js"></script>
+
+<!--[if lt IE 10]>
+<script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
+
+</body>
 
 </html>
