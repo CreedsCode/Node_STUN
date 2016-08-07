@@ -1,13 +1,13 @@
 'use strict';
 
-exports.createServer = function (config, err) {
-	var Server = require('../lib/server');
-	var	stun = new Server(config);
+exports.createServer = (config, err) => {
+	const Server = require('./server'),
+		stun = new Server(config);
 
 	stun.on('log', (log) => {
 		console.log('%s : [%s] %s', new Date(), log.level, log.message);
 	});
-
+	
 	stun.listen();
 
 	if (!err) {

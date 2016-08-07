@@ -18,7 +18,7 @@ function Message() {
  * @private
  * @static
  */
-Message._checkAttrAddr = (value) => {
+Message._checkAttrAddr = function (value) {
 	if (value["family"] == undefined) {
 		value["family"] = "ipv4";
 	}
@@ -34,8 +34,8 @@ Message._checkAttrAddr = (value) => {
  * @private
  * @static
  */
-Message._getMesgTypeByVal = (val) => {
-	let types = Object.keys(Const.MesgTypes);
+Message._getMesgTypeByVal = function (val) {
+	var types = Object.keys(Const.MesgTypes);
 	for (var i = 0; i < types.length; ++i) {
 		if (Const.MesgTypes[types[i]] == val) {
 			return types[i];
@@ -51,7 +51,7 @@ Message._getMesgTypeByVal = (val) => {
  */
 Message._getAttrTypeByVal = function (val) {
 	let types = Object.keys(Const.AttrTypes);
-	for (var i = 0; i < types.length; ++i) {
+	for (let i = 0; i < types.length; ++i) {
 		if (Const.AttrTypes[types[i]] == val) {
 			return types[i];
 		}
@@ -64,16 +64,13 @@ Message._getAttrTypeByVal = function (val) {
  * @private
  * @static
  */
-Message._readAddr = (ctx) => {
+Message._readAddr = function (ctx) {
 	let family,
 		port,
 		addr,
 		families = Object.keys(Const.Families);
-
-	// skip first byte
-	ctx.pos++;
-
-	for (var i = 0; i < families.length; ++i) {
+	ctx.pos++; // skip first byte
+	for (let i = 0; i < families.length; ++i) {
 		if (Const.Families[families[i]] === ctx.buf[ctx.pos]) {
 			family = families[i];
 			break;
@@ -100,7 +97,7 @@ Message._readAddr = (ctx) => {
  * @private
  * @static
  */
-Message._writeAddr = (ctx, code, attrVal) => {
+Message._writeAddr = function (ctx, code, attrVal) {
 	if (ctx.buf.length < ctx.pos + 12) {
 		throw new Error("Insufficient buffer");
 	}
@@ -128,10 +125,10 @@ Message._writeAddr = (ctx, code, attrVal) => {
  * @private
  * @static
  */
-Message._readChangeReq = (ctx) => {
+Message._readChangeReq = function (ctx) {
 	ctx.pos += 3;
-	var chIp = false;
-	var chPort = false;
+	let chIp = false,
+		chPort = false;
 	if (ctx.buf[ctx.pos] & 0x4) {
 		chIp = true;
 	}
@@ -147,7 +144,7 @@ Message._readChangeReq = (ctx) => {
  * @private
  * @static
  */
-Message._writeChangeReq = (ctx, attrVal) => {
+Message._writeChangeReq = function (ctx, attrVal) {
 	if (ctx.buf.length < ctx.pos + 8) {
 		throw new Error("Insufficient buffer");
 	}
@@ -169,7 +166,7 @@ Message._writeChangeReq = (ctx, attrVal) => {
  * @private
  * @static
  */
-Message._readTimestamp = (ctx) => {
+Message._readTimestamp = function (ctx) {
 	let respDelay,
 		timestamp;
 	respDelay = ctx.buf[ctx.pos++] << 8;
@@ -184,7 +181,7 @@ Message._readTimestamp = (ctx) => {
  * @private
  * @static
  */
-Message._writeTimestamp = (ctx, attrVal) => {
+Message._writeTimestamp = function (ctx, attrVal) {
 	if (ctx.buf.length < ctx.pos + 8) {
 		throw new Error("Insufficient buffer");
 	}
@@ -215,7 +212,7 @@ Message.prototype.init = function () {
  * @param {string} type Message type.
  * @throws {RangeError} Unknown message type.
  */
-Message.prototype.setType = (type)=> {
+Message.prototype.setType = function (type) {
 	this._type = Const.MesgTypes[type];
 	if (this._type < 0) throw new RangeError("Unknown message type");
 };
@@ -225,8 +222,8 @@ Message.prototype.setType = (type)=> {
  * @throws {Error} Type undefined.
  * @type string
  */
-Message.prototype.getType = () => {
-	var Ctor = this.constructor;
+Message.prototype.getType = function () {
+	let Ctor = this.constructor;
 	return Ctor._getMesgTypeByVal(this._type);
 };
 
@@ -234,7 +231,7 @@ Message.prototype.getType = () => {
  * Sets transaction ID.
  * @param {Buffer} tid 16-byte transaction ID.
  */
-Message.prototype.setTransactionId = (tid) => {
+Message.prototype.setTransactionId = function (tid) {
 	this._tid = tid;
 };
 
@@ -242,7 +239,7 @@ Message.prototype.setTransactionId = (tid) => {
  * Gets transaction ID.
  * @returns {Buffer} 16-byte Transaction ID.
  */
-Message.prototype.getTransactionId = () => {
+Message.prototype.getTransactionId = function () {
 	return this._tid;
 };
 
@@ -255,9 +252,9 @@ Message.prototype.getTransactionId = () => {
  * @throws {Error} The 'changeIp' property is undefined.
  * @throws {Error} The 'changePort' property is undefined.
  */
-Message.prototype.addAttribute = (attrType, attrVal) => {
-	var Ctor = this.constructor;
-	var code = Const.AttrTypes[attrType];
+Message.prototype.addAttribute = function (attrType, attrVal) {
+	let Ctor = this.constructor,
+		code = Const.AttrTypes[attrType];
 	if (code < 0) {
 		throw new RangeError("Unknown attribute type");
 	}
@@ -314,7 +311,7 @@ Message.prototype.addAttribute = (attrType, attrVal) => {
  * Gets a list of STUN attributes.
  * @type array
  */
-Message.prototype.getAttributes = () => {
+Message.prototype.getAttributes = function () {
 	return this._attrs;
 };
 
@@ -324,7 +321,7 @@ Message.prototype.getAttributes = () => {
  * @type object
  */
 Message.prototype.getAttribute = function (attrType) {
-	for (var i = 0; i < this._attrs.length; ++i) {
+	for (let i = 0; i < this._attrs.length; ++i) {
 		if (this._attrs[i].type === attrType) {
 			return this._attrs[i].value;
 		}
@@ -339,9 +336,9 @@ Message.prototype.getAttribute = function (attrType) {
  * @type number
  */
 Message.prototype.getLength = function () {
-	var len = 20; // header size (fixed)
-	for (var i = 0; i < this._attrs.length; ++i) {
-		var code = Const.AttrTypes[this._attrs[i].type];
+	let len = 20; // header size (fixed)
+	for (let i = 0; i < this._attrs.length; ++i) {
+		let code = Const.AttrTypes[this._attrs[i].type];
 		if (code < 0) {
 			throw new RangeError("Unknown attribute type");
 		}
@@ -445,7 +442,7 @@ Message.prototype.serialize = function () {
  * @param {buffer} buffer Data to be deserialized.
  * @throws {Error} Malformed data in the buffer.
  */
-Message.prototype.deserialize = (buffer) => {
+Message.prototype.deserialize = function (buffer) {
 	let Ctor = this.constructor,
 		ctx = {
 			pos: 0,
@@ -466,7 +463,7 @@ Message.prototype.deserialize = (buffer) => {
 	this._type |= ctx.buf[ctx.pos++];
 
 	// Parse length
-	var len;
+	let len;
 	len = ctx.buf[ctx.pos++] << 8;
 	len |= ctx.buf[ctx.pos++];
 
@@ -484,7 +481,7 @@ Message.prototype.deserialize = (buffer) => {
 			throw new Error("Malformed data");
 
 		let attrLen,
-		 code;
+			code;
 
 		code = ctx.buf[ctx.pos++] << 8;
 		code |= ctx.buf[ctx.pos++];

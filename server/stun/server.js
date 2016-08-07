@@ -4,7 +4,7 @@ const dgram = require('dgram'),
 	util = require('util'),
 	EventEmitter = require('events').EventEmitter,
 	Message = require('./message'),
-	defaults = require('../config').stun.defaults;
+	defaults = require('../../config').stun.defaults;
 
 /**
  * Server class.
@@ -19,16 +19,16 @@ const dgram = require('dgram'),
  */
 function Server(config) {
 	function Check(val) {
-		return (val == null || val == '')
+		return (val == null || val =='');
 	}
+
 	if (Check(config.primary.host) || Check(config.secondary.host) || Check(config.primary.port) || Check(config.secondary.port)) {
-		console.log("No STUN Configuration Found - reverting to defaults");
+		console.log("No STUN Config Found - Reverting to Defaults");
 		this._addr0 = defaults.primary.host;
 		this._addr1 = defaults.secondary.host;
 		this._port0 = parseInt(defaults.primary.port);
 		this._port1 = parseInt(defaults.secondary.port);
 	} else {
-		console.log("STUN Configuration Found");
 		this._addr0 = config.primary.host;
 		this._addr1 = config.secondary.host;
 		this._port0 = parseInt(config.primary.port);
@@ -47,16 +47,16 @@ function Server(config) {
 util.inherits(Server, EventEmitter);
 
 /** @private */
-Server.prototype._onListening = (sid) => {
+Server.prototype._onListening = function (sid) {
 	let sin = this._sockets[sid].address();
 	this._logger.info("soc[" + sid + "] listening on " + sin.address + ":" + sin.port);
 };
 
-Server.prototype._onReceived = (sid, msg, rinfo) => {
+Server.prototype._onReceived = function (sid, msg, rinfo) {
 	this._logger.debug("soc[" + sid + "] received from " + rinfo.address + ":" + rinfo.port);
 
-	var stunmsg = new Message();
-	var fid = sid; // source socket ID for response
+	let stunmsg = new Message();
+	let fid = sid; // source socket ID for response
 
 	this._stats.numRcvd++;
 
@@ -90,8 +90,8 @@ Server.prototype._onReceived = (sid, msg, rinfo) => {
 	}
 
 	// Check if it has timestamp attribute.
-	let txTs,
-		rcvdAt = Date.now();
+	let txTs;
+	let rcvdAt = Date.now();
 	val = stunmsg.getAttribute('timestamp');
 	if (val != undefined) {
 		txTs = val.timestamp;
@@ -114,8 +114,8 @@ Server.prototype._onReceived = (sid, msg, rinfo) => {
 
 		// Offer CHANGED-ADDRESS only when this._addr1 is defined.
 		if (this._addr1 != undefined) {
-			let chAddr = (sid & 0x2) ? this._addr0 : this._addr1,
-				chPort = (sid & 0x1) ? this._port0 : this._port1;
+			let chAddr = (sid & 0x2) ? this._addr0 : this._addr1;
+			let chPort = (sid & 0x1) ? this._port0 : this._port1;
 
 			stunmsg.addAttribute('changedAddr', {
 				'family': 'ipv4',
@@ -160,11 +160,11 @@ Server.prototype._onReceived = (sid, msg, rinfo) => {
 	this._stats.numSent++;
 };
 
-Server.prototype._getPort = (sid) => {
+Server.prototype._getPort = function (sid) {
 	return (sid & 1) ? this._port1 : this._port0;
 };
 
-Server.prototype._getAddr = (sid)=> {
+Server.prototype._getAddr = function (sid) {
 	return (sid & 2) ? this._addr1 : this._addr0;
 };
 
@@ -172,40 +172,20 @@ Server.prototype._getAddr = (sid)=> {
  * Starts listening to STUN requests from clients.
  * @throws {Error} Server address undefined.
  */
-Server.prototype.listen = () => {
-	const self = this;
+Server.prototype.listen = function () {
+	let self = this;
 
 	// Sanity check
 	if (!this._addr0) {
-		console.log("No STUN Configuration Found - reverting to default primary host");
-		this._addr0 = defaults.primary.host;
+		throw new Error("Address undefined");
 	}
 	if (!this._addr1) {
-		console.log("No STUN Configuration Found - reverting to default secondary host");
-		this._addr1 = defaults.secondary.host;
-	}
-	if (!this._port0) {
-		console.log("No STUN Configuration Found - reverting to default primary port");
-		this._port0 = defaults.primary.port;
-	}
-	if (!this._port1) {
-		console.log("No STUN Configuration Found - reverting to default secondary port");
-		this._port1 = defaults.secondary.port;
-		console.log(defaults.secondary.port);
-		console.log(this._addr1)
-	}
-
-	if (!this._addr0 || !this._addr1) {
 		throw new Error("Address undefined");
 	}
 
-	if (!this._port0 || !this._port1) {
-		throw new Error("Port undefined");
-	}
-
-	for (var i = 0; i < 4; ++i) {
+	for (let i = 0; i < 4; ++i) {
 		// Create socket and add it to socket array.
-		var soc = dgram.createSocket("udp4");
+		let soc = dgram.createSocket("udp4");
 		this._sockets.push(soc);
 
 		switch (i) {
@@ -221,7 +201,7 @@ Server.prototype.listen = () => {
 				soc.on("listening", () => {
 					self._onListening(1);
 				});
-				soc.on("message", function (msg, rinfo) {
+				soc.on("message", (msg, rinfo) => {
 					self._onReceived(1, msg, rinfo);
 				});
 				break;
@@ -256,7 +236,7 @@ Server.prototype.listen = () => {
 Server.prototype.close = () => {
 	while (this._sockets.length > 0) {
 		let soc = this._sockets.shift(),
-			sin = soc.address();
+		sin = soc.address();
 		this._logger.info("Closing socket on " + sin.address + ":" + sin.port);
 		soc.close();
 	}

@@ -9,9 +9,8 @@ const express = require('express'),
 	home = require('./server/controllers/home'),
 	app = express(),
 	config = require('./config'),
-	stun = require('./server/stun');
-
-stun.createServer(config.stun);
+	stun = require('./server/stun'),
+	stunServer = stun.createServer(config.stun);
 
 app.set('views', path.join(__dirname, 'public'))
 	.set('view engine', 'ejs')
@@ -26,4 +25,7 @@ app.set('views', path.join(__dirname, 'public'))
 const listener = app.listen(config.server.port, () =>
 	console.log(`Express Server listening on port ${listener.address().port}`));
 
-module.exports = app;
+module.exports = {
+	app,
+	stunServer
+};
