@@ -17,3 +17,11 @@ https://www.varstate.com/
 ##Spec
 
 Bringing it up to ES6
+
+##License
+
+MIT but please request before you use
+
+##Client
+
+See original repository (above)
