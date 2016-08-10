@@ -20,8 +20,8 @@ Bringing it up to ES6
 
 ##License
 
-MIT but please request before you use
-The Frontend is not included as part of that license
+MIT but please request before you use  
+The Frontend is not included as part of that license  
 
 ##Client
 
