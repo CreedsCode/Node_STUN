@@ -1,10 +1,10 @@
 'use strict';
 
 const dgram = require('dgram'),
-	util = require('util'),
-	EventEmitter = require('events').EventEmitter,
-	Message = require('./message'),
-	defaults = require('../../config').stun.defaults;
+    util = require('util'),
+    EventEmitter = require('events').EventEmitter,
+    Message = require('./message'),
+    defaults = require('../../config').stun.defaults;
 
 /**
  * Server class.
@@ -18,154 +18,154 @@ const dgram = require('dgram'),
  * @param {string|number} config.secondary.port Secondary port number
  */
 function Server(config) {
-	function Check(val) {
-		return (val == null || val =='');
-	}
+    function Check(val) {
+        return (val == null || val == '');
+    }
 
-	if (Check(config.primary.host) || Check(config.secondary.host) || Check(config.primary.port) || Check(config.secondary.port)) {
-		console.log("No STUN Config Found - Reverting to Defaults");
-		this._addr0 = defaults.primary.host;
-		this._addr1 = defaults.secondary.host;
-		this._port0 = parseInt(defaults.primary.port);
-		this._port1 = parseInt(defaults.secondary.port);
-	} else {
-		this._addr0 = config.primary.host;
-		this._addr1 = config.secondary.host;
-		this._port0 = parseInt(config.primary.port);
-		this._port1 = parseInt(config.secondary.port);
-	}
-	this._sockets = [];
-	this._stats = {
-		numRcvd: 0,
-		numSent: 0,
-		numMalformed: 0,
-		numUnsupported: 0
-	};
-	this._logger = require('./logger').create(this);
+    if (Check(config.primary.host) || Check(config.secondary.host) || Check(config.primary.port) || Check(config.secondary.port)) {
+        console.log("No STUN Config Found - Reverting to Defaults");
+        this._addr0 = defaults.primary.host;
+        this._addr1 = defaults.secondary.host;
+        this._port0 = parseInt(defaults.primary.port);
+        this._port1 = parseInt(defaults.secondary.port);
+    } else {
+        this._addr0 = config.primary.host;
+        this._addr1 = config.secondary.host;
+        this._port0 = parseInt(config.primary.port);
+        this._port1 = parseInt(config.secondary.port);
+    }
+    this._sockets = [];
+    this._stats = {
+        numRcvd: 0,
+        numSent: 0,
+        numMalformed: 0,
+        numUnsupported: 0
+    };
+    this._logger = require('./logger').create(this);
 }
 
 util.inherits(Server, EventEmitter);
 
 /** @private */
 Server.prototype._onListening = function (sid) {
-	let sin = this._sockets[sid].address();
-	this._logger.info("soc[" + sid + "] listening on " + sin.address + ":" + sin.port);
+    let sin = this._sockets[sid].address();
+    this._logger.info("soc[" + sid + "] listening on " + sin.address + ":" + sin.port);
 };
 
 Server.prototype._onReceived = function (sid, msg, rinfo) {
-	this._logger.debug("soc[" + sid + "] received from " + rinfo.address + ":" + rinfo.port);
+    this._logger.debug("soc[" + sid + "] received from " + rinfo.address + ":" + rinfo.port);
 
-	let stunmsg = new Message();
-	let fid = sid; // source socket ID for response
+    let stunmsg = new Message();
+    let fid = sid; // source socket ID for response
 
-	this._stats.numRcvd++;
+    this._stats.numRcvd++;
 
-	try {
-		stunmsg.deserialize(msg);
-	}
-	catch (e) {
-		this._stats.numMalformed++;
-		this._logger.warn("Error: " + e.message);
-		return;
-	}
+    try {
+        stunmsg.deserialize(msg);
+    }
+    catch (e) {
+        this._stats.numMalformed++;
+        this._logger.warn("Error: " + e.message);
+        return;
+    }
 
-	// We are only interested in binding request.
-	if (stunmsg.getType() != 'breq') {
-		this._stats.numUnsupported++;
-		return;
-	}
+    // We are only interested in binding request.
+    if (stunmsg.getType() != 'breq') {
+        this._stats.numUnsupported++;
+        return;
+    }
 
-	let val;
+    let val;
 
-	// Modify source socket ID (fid) based on
-	// CHANGE-REQUEST attribute.
-	val = stunmsg.getAttribute('changeReq');
-	if (val != undefined) {
-		if (val.changeIp) {
-			fid ^= 0x2;
-		}
-		if (val.changePort) {
-			fid ^= 0x1;
-		}
-	}
+    // Modify source socket ID (fid) based on
+    // CHANGE-REQUEST attribute.
+    val = stunmsg.getAttribute('changeReq');
+    if (val != undefined) {
+        if (val.changeIp) {
+            fid ^= 0x2;
+        }
+        if (val.changePort) {
+            fid ^= 0x1;
+        }
+    }
 
-	// Check if it has timestamp attribute.
-	let txTs;
-	let rcvdAt = Date.now();
-	val = stunmsg.getAttribute('timestamp');
-	if (val != undefined) {
-		txTs = val.timestamp;
-	}
+    // Check if it has timestamp attribute.
+    let txTs;
+    let rcvdAt = Date.now();
+    val = stunmsg.getAttribute('timestamp');
+    if (val != undefined) {
+        txTs = val.timestamp;
+    }
 
-	//this._logger.debug("sid=" + sid + " fid=" + fid);
+    //this._logger.debug("sid=" + sid + " fid=" + fid);
 
-	try {
-		// Initialize the message object to reuse.
-		// The init() does not reset transaction ID.
-		stunmsg.init();
-		stunmsg.setType('bres');
+    try {
+        // Initialize the message object to reuse.
+        // The init() does not reset transaction ID.
+        stunmsg.init();
+        stunmsg.setType('bres');
 
-		// Add mapped address.
-		stunmsg.addAttribute('mappedAddr', {
-			'family': 'ipv4',
-			'port': rinfo.port,
-			'addr': rinfo.address
-		});
+        // Add mapped address.
+        stunmsg.addAttribute('mappedAddr', {
+            'family': 'ipv4',
+            'port': rinfo.port,
+            'addr': rinfo.address
+        });
 
-		// Offer CHANGED-ADDRESS only when this._addr1 is defined.
-		if (this._addr1 != undefined) {
-			let chAddr = (sid & 0x2) ? this._addr0 : this._addr1;
-			let chPort = (sid & 0x1) ? this._port0 : this._port1;
+        // Offer CHANGED-ADDRESS only when this._addr1 is defined.
+        if (this._addr1 != undefined) {
+            let chAddr = (sid & 0x2) ? this._addr0 : this._addr1;
+            let chPort = (sid & 0x1) ? this._port0 : this._port1;
 
-			stunmsg.addAttribute('changedAddr', {
-				'family': 'ipv4',
-				'port': chPort,
-				'addr': chAddr
-			});
-		}
+            stunmsg.addAttribute('changedAddr', {
+                'family': 'ipv4',
+                'port': chPort,
+                'addr': chAddr
+            });
+        }
 
-		let soc = this._sockets[fid];
+        let soc = this._sockets[fid];
 
-		// Add source address.
-		stunmsg.addAttribute('sourceAddr', {
-			'family': 'ipv4',
-			'port': soc.address().port,
-			'addr': soc.address().address
-		});
+        // Add source address.
+        stunmsg.addAttribute('sourceAddr', {
+            'family': 'ipv4',
+            'port': soc.address().port,
+            'addr': soc.address().address
+        });
 
-		// Add timestamp if existed in the request.
-		if (txTs) {
-			stunmsg.addAttribute('timestamp', {
-				'respDelay': ((Date.now() - rcvdAt) & 0xffff),
-				'timestamp': txTs
-			});
-		}
+        // Add timestamp if existed in the request.
+        if (txTs) {
+            stunmsg.addAttribute('timestamp', {
+                'respDelay': ((Date.now() - rcvdAt) & 0xffff),
+                'timestamp': txTs
+            });
+        }
 
-		let resp = stunmsg.serialize();
-		if (!soc) {
-			throw new Error("Invalid from ID: " + fid);
-		}
+        let resp = stunmsg.serialize();
+        if (!soc) {
+            throw new Error("Invalid from ID: " + fid);
+        }
 
-		this._logger.debug('soc[' + fid + '] sending ' + resp.length + ' bytes to ' + rinfo.address + ':' + rinfo.port);
-		soc.send(resp,
-			0,
-			resp.length,
-			rinfo.port,
-			rinfo.address);
-	} catch (e) {
-		this._stats.numMalformed++;
-		this._logger.debug("Error: " + e.message);
-	}
+        this._logger.debug('soc[' + fid + '] sending ' + resp.length + ' bytes to ' + rinfo.address + ':' + rinfo.port);
+        soc.send(resp,
+            0,
+            resp.length,
+            rinfo.port,
+            rinfo.address);
+    } catch (e) {
+        this._stats.numMalformed++;
+        this._logger.debug("Error: " + e.message);
+    }
 
-	this._stats.numSent++;
+    this._stats.numSent++;
 };
 
 Server.prototype._getPort = function (sid) {
-	return (sid & 1) ? this._port1 : this._port0;
+    return (sid & 1) ? this._port1 : this._port0;
 };
 
 Server.prototype._getAddr = function (sid) {
-	return (sid & 2) ? this._addr1 : this._addr0;
+    return (sid & 2) ? this._addr1 : this._addr0;
 };
 
 /**
@@ -173,73 +173,73 @@ Server.prototype._getAddr = function (sid) {
  * @throws {Error} Server address undefined.
  */
 Server.prototype.listen = function () {
-	let self = this;
+    let self = this;
 
-	// Sanity check
-	if (!this._addr0) {
-		throw new Error("Address undefined");
-	}
-	if (!this._addr1) {
-		throw new Error("Address undefined");
-	}
+    // Sanity check
+    if (!this._addr0) {
+        throw new Error("Address undefined");
+    }
+    if (!this._addr1) {
+        throw new Error("Address undefined");
+    }
 
-	for (let i = 0; i < 4; ++i) {
-		// Create socket and add it to socket array.
-		let soc = dgram.createSocket("udp4");
-		this._sockets.push(soc);
+    for (let i = 0; i < 4; ++i) {
+        // Create socket and add it to socket array.
+        let soc = dgram.createSocket("udp4");
+        this._sockets.push(soc);
 
-		switch (i) {
-			case 0:
-				soc.on("listening", () => {
-					self._onListening(0);
-				});
-				soc.on("message", (msg, rinfo) => {
-					self._onReceived(0, msg, rinfo);
-				});
-				break;
-			case 1:
-				soc.on("listening", () => {
-					self._onListening(1);
-				});
-				soc.on("message", (msg, rinfo) => {
-					self._onReceived(1, msg, rinfo);
-				});
-				break;
-			case 2:
-				soc.on("listening", () => {
-					self._onListening(2);
-				});
-				soc.on("message", (msg, rinfo) => {
-					self._onReceived(2, msg, rinfo);
-				});
-				break;
-			case 3:
-				soc.on("listening", () => {
-					self._onListening(3);
-				});
-				soc.on("message", (msg, rinfo) => {
-					self._onReceived(3, msg, rinfo);
-				});
-				break;
-			default:
-				throw new RangeError("Out of socket array");
-		}
+        switch (i) {
+            case 0:
+                soc.on("listening", () => {
+                    self._onListening(0);
+                });
+                soc.on("message", (msg, rinfo) => {
+                    self._onReceived(0, msg, rinfo);
+                });
+                break;
+            case 1:
+                soc.on("listening", () => {
+                    self._onListening(1);
+                });
+                soc.on("message", (msg, rinfo) => {
+                    self._onReceived(1, msg, rinfo);
+                });
+                break;
+            case 2:
+                soc.on("listening", () => {
+                    self._onListening(2);
+                });
+                soc.on("message", (msg, rinfo) => {
+                    self._onReceived(2, msg, rinfo);
+                });
+                break;
+            case 3:
+                soc.on("listening", () => {
+                    self._onListening(3);
+                });
+                soc.on("message", (msg, rinfo) => {
+                    self._onReceived(3, msg, rinfo);
+                });
+                break;
+            default:
+                throw new RangeError("Out of socket array");
+        }
 
-		// Start listening.
-		soc.bind(self._getPort(i), self._getAddr(i));
-	}
+        // Start listening.
+        soc.bind(self._getPort(i), self._getAddr(i));
+    }
 };
 
 /**
  * Closes the STUN server.
  */
 Server.prototype.close = () => {
-	while (this._sockets.length > 0) {
-		let soc = this._sockets.shift(),
-		sin = soc.address();
-		this._logger.info("Closing socket on " + sin.address + ":" + sin.port);
-		soc.close();
-	}
+    while (this._sockets.length > 0) {
+        let soc = this._sockets.shift(),
+            sin = soc.address();
+        this._logger.info("Closing socket on " + sin.address + ":" + sin.port);
+        soc.close();
+    }
 };
 
 module.exports = Server;
