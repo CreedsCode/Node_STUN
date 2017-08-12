@@ -1,5 +1,7 @@
 # tool-node_stun
 
+[![Build Status](https://travis-ci.org/Thoughtscript/Node_STUN.svg?branch=master)](https://travis-ci.org/Thoughtscript/Node_STUN)
+
 ## Forked From:
 
 ```
