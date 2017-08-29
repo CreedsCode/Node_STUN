@@ -9,6 +9,13 @@ Yutaka Takeda
 See vendordocs.
 ```
 
+## How to Use:
+
+```bash
+  $ npm install
+  $ node server.js
+```
+
 https://github.com/enobufs/stun
 
 ## Hosted:
