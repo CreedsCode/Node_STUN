@@ -24,6 +24,8 @@ http://www.nodestun.herokuapp.com
 
 Formerly hosted: https://www.varstate.com/
 
+It's on Heroku's free tier so it may take a moment to spin up!
+
 ## Spec
 
 Bringing it up to ES6
