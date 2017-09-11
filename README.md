@@ -21,7 +21,8 @@ https://github.com/enobufs/stun
 ## Hosted:
 
 http://www.nodestun.herokuapp.com
-https://www.varstate.com/
+
+Formerly hosted: https://www.varstate.com/
 
 ## Spec
 
